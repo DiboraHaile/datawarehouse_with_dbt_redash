@@ -9,3 +9,7 @@ A Data warehouse that is built with postgres database that uses airflow to inges
 - [ ] Create a MYSQL/SQL docker container
 - [ ] Write a python script that ingests the parsed data to the database
 - [ ] Make the two containers communicate
+
+## The data source for this project 
+The data taken for this project came from [Neuma](https://open-traffic.epfl.ch/) 
+You can read further about the data [here](data/README.md)
