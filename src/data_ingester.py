@@ -4,7 +4,8 @@ import sys
 import psycopg2 as p
 from psycopg2 import sql
 import argparse
-from data_parser import prepare_for_record,prepare_for_trajectory
+from data_parser import prepare_for_record,prepare_for_trajectory,date_parser,time_parser
+from datetime import datetime
 sys.path.append("../data/")
 import logging
 
@@ -29,15 +30,19 @@ class IngestData:
         self.conn = p.connect(dbname=self.dbname,user=self.user,password=self.password,host=self.host,port=self.port)
         self.cur = self.conn.cursor()
 
-    def get_file_location(self):
+    def extract_info_from_filename(self):
         files = glob.glob(self.file_path)
         file_names = glob.iglob(self.file_path)
-        locations = []
+        extracted = []
         for file_name in file_names:
-            location_str = str(file_name).split('/')[-1].split('.csv')[0].split('_')[1]
-            location_val = int(location_str.replace('d',''))
-            locations.append(location_val)
-        return files,locations
+            parsed_info = []
+            date,location,time_min,time_max = str(file_name).split('/')[-1].split('.csv')[0].split('_')
+            parsed_info.append(date_parser(date))
+            parsed_info.append(int(location.replace('d','')))
+            parsed_info.append(time_parser(time_min))
+            parsed_info.append(time_parser(time_max))
+            extracted.append(parsed_info)
+        return files,extracted
 
     def ingest_to_db(self):
         trajectory_table = 'trajectory'
@@ -66,7 +71,7 @@ class IngestData:
         logging.info("ingestion successfull")
         
     def create_tables(self,replace=True):
-        sql_create_trajectory = "create table trajectory (id int primary key, track_id int , vehicle_type varchar (50), traveled_d float8 check (traveled_d >= 0), avg_speed float8 check(avg_speed >= 0),geo_location int);"
+        sql_create_trajectory = "create table trajectory (id int primary key, track_id int , vehicle_type varchar (50), traveled_d float8 check (traveled_d >= 0), avg_speed float8 check(avg_speed >= 0),geo_location int,date date,time_min time,time_max);"
         if replace:
             self.cur.execute("DROP TABLE IF EXISTS record;")
             self.cur.execute("DROP TABLE IF EXISTS trajectory;")
@@ -90,10 +95,11 @@ def main(params):
     url = params.url
     file_path = params.file_path
     id = IngestData(file_path,db,user,password,host,port)
-    if params.execute == 'ingest':
-        id.ingest_to_db()
-    elif params.execute == 'rewrite_table':
-        id.create_tables()
+    print(id.extract_info_from_filename())
+    # if params.execute == 'ingest':
+    #     id.ingest_to_db()
+    # elif params.execute == 'rewrite_table':
+    #     id.create_tables()
 
 
 if __name__ == '__main__':
