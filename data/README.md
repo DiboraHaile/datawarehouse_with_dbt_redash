@@ -11,3 +11,7 @@ the first 10 columns in the 1st row include the columns’ names (track_id; type
 - the first 4 columns include information about the trajectory like the unique trackID, the type of vehicle, the distance traveled in meters and the average speed of the vehicle in km/h
 - the last 6 columns are then repeated every 6 columns based on the time frequency. For example, column_5 contains the latitude of the vehicle at time column_10, and column­­­_11 contains the latitude of the vehicle at time column_16.
 Speed is in km/h, Longitudinal and Lateral Acceleration in m/sec2 and time in seconds.
+
+## Data schema
+Data is ingested to a postgres database with the name of traffic_stream_record
+there are two tables in these database named trajectory and record. You can find the schemas of these two tables on [here](https://dbdiagram.io/d/traffic_stream_record-65253c0bffbf5169f066488a)
