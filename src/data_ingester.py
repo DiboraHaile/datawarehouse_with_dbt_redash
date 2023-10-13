@@ -37,55 +37,57 @@ class IngestData:
         for file_name in file_names:
             parsed_info = []
             date,location,time_min,time_max = str(file_name).split('/')[-1].split('.csv')[0].split('_')
-            parsed_info.append(date_parser(date))
+            print(time_max)
             parsed_info.append(int(location.replace('d','')))
+            parsed_info.append(date_parser(date))
             parsed_info.append(time_parser(time_min))
             parsed_info.append(time_parser(time_max))
             extracted.append(parsed_info)
+            print(parsed_info)
         return files,extracted
 
     def ingest_to_db(self):
         trajectory_table = 'trajectory'
         record_table = 'record'
-        trajectory_cols = ['track_id', 'vehicle_type', 'traveled_d','avg_speed','geo_location']
+        trajectory_cols = ['track_id', 'vehicle_type', 'traveled_d','avg_speed','geo_location','recording_date','time_min','time_max']
         record_cols = ['track_id','lat','lon','speed','lon_acc','lat_acc','record_time']
-        
-        files,geo_locations = self.get_file_location()
-        for file,location in zip(files,geo_locations):
+        # new_id = self.get_last_id()+1
+
+        files,datetime_locations = self.extract_info_from_filename()
+        for file,datetime_location in zip(files,datetime_locations):
             df = pd.read_csv(file)
             for i in range(df.shape[0]):
+                # row = [new_id].extend(
                 row = df.iloc[i,0].split(';')
-                track_id,trajectory_data = prepare_for_trajectory(row[0:4],location)
-                logging.info(trajectory_data)
+                track_id,trajectory_data = prepare_for_trajectory(row[0:4],datetime_location)
+                print(trajectory_data)
                 sql_trajectory = create_insert_stmt(trajectory_table,trajectory_cols)
                 self.cur.execute(sql_trajectory, trajectory_data)
                 for i in range(4,len(row),6):
                     if len(row[i:i+6]) != 1:
                         record_data = prepare_for_record(track_id,row[i:i+6])
                         sql_record = create_insert_stmt(record_table,record_cols)
-                        logging.info(record_data)
+                        print(record_data)
                         self.cur.execute(sql_record, record_data)
-                        logging.info("row inserted")
+                        print("row inserted")
+                # new_id += 1
         self.conn.commit()
         self.conn.close()
-        logging.info("ingestion successfull")
+        print("ingestion successfull")
         
     def create_tables(self,replace=True):
-        sql_create_trajectory = "create table trajectory (id int primary key, track_id int , vehicle_type varchar (50), traveled_d float8 check (traveled_d >= 0), avg_speed float8 check(avg_speed >= 0),geo_location int,date date,time_min time,time_max);"
+        sql_create_trajectory = "create table trajectory (track_id int , vehicle_type varchar (50), traveled_d float8 check (traveled_d >= 0), avg_speed float8 check(avg_speed >= 0),geo_location int,recording_date date,time_min time,time_max time);"
         if replace:
             self.cur.execute("DROP TABLE IF EXISTS record;")
             self.cur.execute("DROP TABLE IF EXISTS trajectory;")
+            print("tables trajectory and record successfully dropped")
         self.cur.execute(sql_create_trajectory)
-        sql_create_record = "create table record (trajectory_id references trajectory (id),track_id int, lat float8, lon float8, speed float8, lon_acc float8, lat_acc float8,record_time float8 check (record_time >= 0));"
+        sql_create_record = "create table record (track_id int,lat float8, lon float8, speed float8, lon_acc float8, lat_acc float8,record_time float8 check (record_time >= 0));"
         self.cur.execute(sql_create_record)
         self.conn.commit()
         self.conn.close()
+        print("tables trajectory and record successfully recreated")
     
-    def get_last_id(self):
-        self.last_id = self.cur.execute("select max(id) from trajectory;")
-
-
-
 def main(params):
     user = params.user
     password = params.password
@@ -95,11 +97,10 @@ def main(params):
     url = params.url
     file_path = params.file_path
     id = IngestData(file_path,db,user,password,host,port)
-    print(id.extract_info_from_filename())
-    # if params.execute == 'ingest':
-    #     id.ingest_to_db()
-    # elif params.execute == 'rewrite_table':
-    #     id.create_tables()
+    if params.execute == 'ingest':
+        id.ingest_to_db()
+    elif params.execute == 'rewrite_table':
+        id.create_tables()
 
 
 if __name__ == '__main__':
