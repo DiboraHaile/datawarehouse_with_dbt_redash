@@ -4,7 +4,7 @@ A Data warehouse that is built with postgres database that uses airflow to inges
 ## Roadmap
 - [x] Get data source
 - [x] Write a parser in python
-- [ ] Ingest data to postgres
+- [x] Ingest data to postgres
 - [ ] Dockerize postgres database
 - [ ] Dockerize redash
 - [ ] Setup DBT
