@@ -5,13 +5,13 @@ A Data warehouse that is built with postgres database that uses airflow to inges
 - [x] Get data source
 - [x] Write a parser in python
 - [x] Ingest data to postgres
-- [ ] Dockerize postgres database
-- [ ] Dockerize redash
-- [ ] Setup DBT
+- [x] Dockerize postgres database
+- [x] Dockerize redash
+- [] Setup DBT
 - [ ] Create DBT models
 - [ ] Create visualizations on redash using the models
 - [ ] Automate the ingestion
-- [ ] Dockerize airflow
+- [x] Dockerize airflow
 - [ ] Dockerize ingesting script
 - [ ] Clean up the documentation
 
@@ -19,4 +19,19 @@ A Data warehouse that is built with postgres database that uses airflow to inges
 ## The data source for this project 
 The data taken for this project came from [Neuma](https://open-traffic.epfl.ch/) 
 You can read further about the data [here](data/README.md)
+
+## Setup
+To run the environment for this project:
+
+- clone this repository:
+    ```git clone https://github.com/DiboraHaile/datawarehouse_with_dbt_redash.git ```
+
+- Go into datawarehouse_with_dbt_redash directory:
+    ``` cd datawarehouse_with_dbt_redash```
+
+- Run the followng on your terminal to start the postgres,redash and airflow containers:
+    ``` make setup ```
+  
+- To stop run:
+    ``` make stop ```
 
