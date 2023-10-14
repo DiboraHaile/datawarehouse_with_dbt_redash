@@ -1,0 +1,8 @@
+airflow/.env
+airflow/plugins
+*.csv
+dw_env
+logs
+postgres-data
+env
+
