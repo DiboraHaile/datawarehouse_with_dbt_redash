@@ -7,7 +7,7 @@ A Data warehouse that is built with postgres database that uses airflow to inges
 - [x] Ingest data to postgres
 - [x] Dockerize postgres database
 - [x] Dockerize redash
-- [] Setup DBT
+- [ ] Setup DBT
 - [ ] Create DBT models
 - [ ] Create visualizations on redash using the models
 - [ ] Automate the ingestion
@@ -24,14 +24,18 @@ You can read further about the data [here](data/README.md)
 To run the environment for this project:
 
 - clone this repository:
+  
     ```git clone https://github.com/DiboraHaile/datawarehouse_with_dbt_redash.git ```
 
 - Go into datawarehouse_with_dbt_redash directory:
+
     ``` cd datawarehouse_with_dbt_redash```
 
 - Run the followng on your terminal to start the postgres,redash and airflow containers:
+
     ``` make setup ```
   
 - To stop run:
+  
     ``` make stop ```
 
