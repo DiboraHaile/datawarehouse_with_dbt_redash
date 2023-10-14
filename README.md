@@ -5,13 +5,13 @@ A Data warehouse that is built with postgres database that uses airflow to inges
 - [x] Get data source
 - [x] Write a parser in python
 - [x] Ingest data to postgres
-- [ ] Dockerize postgres database
-- [ ] Dockerize redash
-- [ ] Setup DBT
+- [x] Dockerize postgres database
+- [x] Dockerize redash
+- [] Setup DBT
 - [ ] Create DBT models
 - [ ] Create visualizations on redash using the models
 - [ ] Automate the ingestion
-- [ ] Dockerize airflow
+- [x] Dockerize airflow
 - [ ] Dockerize ingesting script
 - [ ] Clean up the documentation
 
