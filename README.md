@@ -23,3 +23,18 @@ You can read further about the data [here](data/README.md)
 ## Data schema
 Data is ingested to a postgres database with the name of traffic_stream_record
 there are two tables in these database named trajectory and record. You can find the schemas of these two tables on [here](https://dbdiagram.io/d/traffic_stream_record-65253c0bffbf5169f066488a)
+
+## Setup
+To run the environment for this project:
+
+- clone this repository:
+    ```git clone https://github.com/DiboraHaile/datawarehouse_with_dbt_redash.git ```
+
+- Go into datawarehouse_with_dbt_redash directory:
+    ``` cd datawarehouse_with_dbt_redash```
+
+- Run the followng on your terminal to start the postgres,redash and airflow containers:
+    ``` make setup ```
+  
+- To stop run:
+    ``` make stop ```
