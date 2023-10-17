@@ -84,6 +84,8 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+  networks:
+      - custom-network
 
 services:
   postgres:
@@ -100,6 +102,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    networks:
+      - custom-network
 
   redis:
     image: redis:latest
@@ -112,6 +116,8 @@ services:
       retries: 50
       start_period: 30s
     restart: always
+    networks:
+      - custom-network
 
   airflow-webserver:
     <<: *airflow-common
@@ -129,6 +135,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - custom-network
 
   airflow-scheduler:
     <<: *airflow-common
@@ -144,6 +152,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    networks:
+      - custom-network
 
   airflow-worker:
     <<: *airflow-common
@@ -167,7 +177,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+    networks:
+      - custom-network
   airflow-triggerer:
     <<: *airflow-common
     command: triggerer
@@ -182,7 +193,8 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+    networks:
+      - custom-network
   airflow-init:
     <<: *airflow-common
     entrypoint: /bin/bash
@@ -295,7 +307,11 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+    networks:
+      - custom-network
 volumes:
   postgres-db-volume:
 
+networks:
+  custom-network:
+    external: true
