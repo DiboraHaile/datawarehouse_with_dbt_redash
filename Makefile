@@ -1,19 +1,17 @@
 setup:
+# create a custom network
+# docker create network custom-network
+	make -C redash/ setup
+	make -C airflow/ init
+
+start:
 	docker-compose up -d 
-# # run redash container
-# 	make -C redash/ setup
-# 	make -C redash/ start
+	make -C redash/ start
+	make -C airflow/ start
 
-# run airflow container
-	# make -C airflow/ init
-	# make -C airflow/ start
-# run postgres container
+
 stop:
-	make -C redash/ stop
+	docker-compose down
 	make -C airflow/ stop
+	make -C redash/ stop
 
-# redash:
-# 	docker-compose -f redash/docker-compose-redash.yml up -d
-
-# pg:
-# 	docker-compose -f redash/docker-compose-redash.yml stop
