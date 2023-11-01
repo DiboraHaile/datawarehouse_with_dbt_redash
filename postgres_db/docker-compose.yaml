@@ -6,3 +6,10 @@ services:
       - "./postgres_data:/var/lib/postgresql/data:rw"
     ports:
       - "5435:5432"
+    networks: 
+      - airflow
+
+networks:
+  airflow:
+    external:
+      name: airflow_default
