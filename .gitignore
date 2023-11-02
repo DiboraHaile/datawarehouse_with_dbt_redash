@@ -5,5 +5,11 @@ dw_env
 logs
 postgres-data
 env
-*.pyc
-*.log
+/__pychache__
+/logs
+.*
+env
+*.pdf
+
+
+
