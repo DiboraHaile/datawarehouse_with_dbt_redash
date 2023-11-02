@@ -25,6 +25,13 @@ class IngestData:
         self.host= host
         self.port= port
         self.initialize_db_connection()
+        self.check_if_table_exists('trajectory')
+
+    def check_if_table_exists(self,table_name):
+        check_table_query = sql.SQL("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = %s)").format(sql.Identifier(table_name))
+        self.cur.execute(check_table_query, (table_name,))
+        self.table_exists = self.cur.fetchone()[0]
+
 
     def initialize_db_connection(self):
         self.conn = p.connect(dbname=self.dbname,user=self.user,password=self.password,host=self.host,port=self.port)
@@ -51,14 +58,13 @@ class IngestData:
         record_table = 'record'
         trajectory_cols = ['track_id', 'vehicle_type', 'traveled_d','avg_speed','geo_location','recording_date','time_min','time_max']
         record_cols = ['track_id','lat','lon','speed','lon_acc','lat_acc','record_time']
-        # new_id = self.get_last_id()+1
+
 
         files,datetime_locations = self.extract_info_from_filename()
         print(f"Files {files}")
         for file,datetime_location in zip(files,datetime_locations):
             df = pd.read_csv(file)
             for i in range(df.shape[0]):
-                # row = [new_id].extend(
                 row = df.iloc[i,0].split(';')
                 track_id,trajectory_data = prepare_for_trajectory(row[0:4],datetime_location)
                 print(trajectory_data)
@@ -78,10 +84,10 @@ class IngestData:
         
     def create_tables(self,replace=True):
         sql_create_trajectory = "create table trajectory (track_id int , vehicle_type varchar (50), traveled_d float8 check (traveled_d >= 0), avg_speed float8 check(avg_speed >= 0),geo_location int,recording_date date,time_min time,time_max time);"
-        if replace:
-            self.cur.execute("DROP TABLE IF EXISTS record;")
-            self.cur.execute("DROP TABLE IF EXISTS trajectory;")
-            print("tables trajectory and record successfully dropped")
+        # if replace:
+        #     self.cur.execute("DROP TABLE IF EXISTS record;")
+        #     self.cur.execute("DROP TABLE IF EXISTS trajectory;")
+        #     print("tables trajectory and record successfully dropped")
         self.cur.execute(sql_create_trajectory)
         sql_create_record = "create table record (track_id int,lat float8, lon float8, speed float8, lon_acc float8, lat_acc float8,record_time float8 check (record_time >= 0));"
         self.cur.execute(sql_create_record)
@@ -99,13 +105,14 @@ def main(**params):
     db = params.get("db")
     file_path = params.get("file_path")
     print(file_path,db,user,password,host,port)
-    # return 
+
     id = IngestData(file_path,db,user,password,host,port)
-    id.ingest_to_db()
-    # if params.execute == 'ingest':
-    #     id.ingest_to_db()
-    # elif params.execute == 'rewrite_table':
-    #     id.create_tables()
+    if id.table_exists:
+        id.ingest_to_db()
+    else:
+        id.create_tables()
+        id.ingest_to_db()
+
 
 
 
