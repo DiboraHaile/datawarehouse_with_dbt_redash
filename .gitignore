@@ -12,9 +12,5 @@ env
 env
 *.pdf
 
-=======
-*.pyc
-*.log
-*.pdf
-*
+
 >>>>>>> 62cd4ec (remove unwanted files from being tracked by git)
