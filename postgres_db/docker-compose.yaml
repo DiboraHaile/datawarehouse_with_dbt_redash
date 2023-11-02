@@ -3,13 +3,17 @@ services:
     image: postgres:14
     env_file: ./env
     volumes:
-      - "./postgres_data:/var/lib/postgresql/data:rw"
+      - "./../postgres_data:/var/lib/postgresql/data:rw"
     ports:
       - "5435:5432"
     networks: 
       - airflow
+      - dbt
 
 networks:
   airflow:
     external:
       name: airflow_default
+  dbt:
+    external:
+      name: dbt_transformation_default
