@@ -55,7 +55,7 @@ x-airflow-common:
     context: .
     dockerfile: Dockerfile
   env_file: 
-    - ingester/env
+    - .env
     
   environment:
     &airflow-common-env
