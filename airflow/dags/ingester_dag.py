@@ -26,6 +26,7 @@ def ingester_callable(**kwargs):
             )
     main(**op_kwargs)
 
+
 default_args = {
     'owner': 'dibora',
     'depends_on_past': False,

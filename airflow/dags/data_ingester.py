@@ -89,6 +89,7 @@ class IngestData:
         self.conn.close()
         print("tables trajectory and record successfully recreated")
     
+
 def main(**params):
     print(params)
     user = params.get("user")
@@ -107,6 +108,7 @@ def main(**params):
     #     id.create_tables()
 
 
+
 if __name__ == '__main__':
     # user 
     # password
@@ -122,6 +124,7 @@ if __name__ == '__main__':
     parser.add_argument('--port',help='port for postgres',default=os.getenv('POSTGRES_PORT'))
     parser.add_argument('--db',help='database name for postgres',default=os.getenv('POSTGRES_DB'))
     parser.add_argument('--file_path',help='location of csv file',default=r"data/*.csv")
+
 
     parser.add_argument('--execute', choices=['rewrite_table','ingest'], default='ingest',
                         help='specifiy an action to run from rewritting table/ ingesting data')

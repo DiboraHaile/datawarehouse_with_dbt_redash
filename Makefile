@@ -11,5 +11,5 @@ start:
 	make -C airflow/ start
 # run postgres container
 stop:
-
 	make -C airflow/ stop
+
