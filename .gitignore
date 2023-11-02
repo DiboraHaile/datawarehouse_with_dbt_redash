@@ -5,7 +5,7 @@ dw_env
 logs
 postgres-data
 env
-/__pychache__
+__pychache__
 /logs
 .*
 env
