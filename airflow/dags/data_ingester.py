@@ -6,7 +6,7 @@ from psycopg2 import sql
 import argparse
 from data_parser import prepare_for_record,prepare_for_trajectory,date_parser,time_parser
 from datetime import datetime
-sys.path.append("../data/")
+import os
 import logging
 
 def create_insert_stmt(table_name,cols):
@@ -54,6 +54,7 @@ class IngestData:
         # new_id = self.get_last_id()+1
 
         files,datetime_locations = self.extract_info_from_filename()
+        print(f"Files {files}")
         for file,datetime_location in zip(files,datetime_locations):
             df = pd.read_csv(file)
             for i in range(df.shape[0]):
@@ -88,19 +89,24 @@ class IngestData:
         self.conn.close()
         print("tables trajectory and record successfully recreated")
     
-def main(params):
-    user = params.user
-    password = params.password
-    host = params.host
-    port = params.port
-    db = params.db
-    url = params.url
-    file_path = params.file_path
+
+def main(**params):
+    print(params)
+    user = params.get("user")
+    password = params.get("password")
+    host = params.get("host")
+    port = params.get("port")
+    db = params.get("db")
+    file_path = params.get("file_path")
+    print(file_path,db,user,password,host,port)
+    # return 
     id = IngestData(file_path,db,user,password,host,port)
-    if params.execute == 'ingest':
-        id.ingest_to_db()
-    elif params.execute == 'rewrite_table':
-        id.create_tables()
+    id.ingest_to_db()
+    # if params.execute == 'ingest':
+    #     id.ingest_to_db()
+    # elif params.execute == 'rewrite_table':
+    #     id.create_tables()
+
 
 
 if __name__ == '__main__':
@@ -112,13 +118,13 @@ if __name__ == '__main__':
     # url of the csv
     # date
     parser = argparse.ArgumentParser(description='Ingest csv data to Postgres')
-    parser.add_argument('--user',help='role for postgres',default="root")
-    parser.add_argument('--password',help='password for postgres',default="root")
-    parser.add_argument('--host',help='host for postgres',default="0.0.0.0")
-    parser.add_argument('--port',help='port for postgres',default=5435)
-    parser.add_argument('--db',help='database name for postgres',default="traffic_stream_record")
-    parser.add_argument('--url',help='url of the csv file',default="root")
-    parser.add_argument('--file_path',help='location of csv file',default=r"../data/*.csv")
+    parser.add_argument('--user',help='role for postgres',default=os.getenv('POSTGRES_USER'))
+    parser.add_argument('--password',help='password for postgres',default=os.getenv('POSTGRES_PASSWORD'))
+    parser.add_argument('--host',help='host for postgres',default=os.getenv('POSTGRES_HOST'))
+    parser.add_argument('--port',help='port for postgres',default=os.getenv('POSTGRES_PORT'))
+    parser.add_argument('--db',help='database name for postgres',default=os.getenv('POSTGRES_DB'))
+    parser.add_argument('--file_path',help='location of csv file',default=r"data/*.csv")
+
 
     parser.add_argument('--execute', choices=['rewrite_table','ingest'], default='ingest',
                         help='specifiy an action to run from rewritting table/ ingesting data')
