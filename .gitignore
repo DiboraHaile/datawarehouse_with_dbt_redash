@@ -5,9 +5,16 @@ dw_env
 logs
 postgres-data
 env
+<<<<<<< HEAD
 /__pychache__
 /logs
 .*
 env
 *.pdf
 
+=======
+*.pyc
+*.log
+*.pdf
+*
+>>>>>>> 62cd4ec (remove unwanted files from being tracked by git)
