@@ -6,12 +6,10 @@ setup:
 
 start:
 	docker-compose up -d 
-	make -C redash/ start
+# run airflow container
+	make -C airflow/ init
 	make -C airflow/ start
-
-
+# run postgres container
 stop:
-	docker-compose down
-	make -C airflow/ stop
-	make -C redash/ stop
 
+	make -C airflow/ stop
