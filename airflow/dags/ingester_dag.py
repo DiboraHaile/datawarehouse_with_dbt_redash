@@ -4,16 +4,19 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from data_ingester import main
 import os
-# from airflow.providers.docker.operators.docker import DockerOperator
+from dotenv import load_dotenv
+
 
 AIRFLOW_HOME = os.environ.get("AIRFLOW_HOME", "/opt/airflow/")
-
-
+# Load environment variables from .env file
+load_dotenv()
 PG_HOST = os.getenv('POSTGRES_HOST')
 PG_USER = os.getenv('POSTGRES_USER')
 PG_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 PG_PORT = os.getenv('POSTGRES_PORT')
 PG_DATABASE = os.getenv('POSTGRES_DB')
+PATH = os.getenv('ABSOLUTE_PATH_PROJ')
+
 
 def ingester_callable(**kwargs):
     op_kwargs=dict(
@@ -22,7 +25,7 @@ def ingester_callable(**kwargs):
                 host=PG_HOST,
                 port=PG_PORT,
                 db=PG_DATABASE,
-                file_path=r"/opt/airflow/dags/data/*.csv"
+                file_path=f"{PATH}/data/*.csv"
             )
     main(**op_kwargs)
 
@@ -30,10 +33,10 @@ def ingester_callable(**kwargs):
 default_args = {
     'owner': 'dibora',
     'depends_on_past': False,
-    'start_date': datetime(2023, 1, 1),
+    'start_date': datetime(2023, 11, 6),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
+    'retries': 0,
     'retry_delay': timedelta(minutes=5),
 }
 
