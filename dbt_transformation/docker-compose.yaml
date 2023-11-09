@@ -1,7 +1,0 @@
-services:
-  dbt:
-    image: ghcr.io/dbt-labs/dbt-postgres:1.6.6
-    volumes:
-      - ./:/usr/app
-      - ./profiles.yml:/root/.dbt/
-    entrypoint: ["sleep", "86400"]
