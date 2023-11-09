@@ -291,6 +291,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./:/usr/app/dbt_transformation/
       - /Users/dibora/.dbt/:/root/.dbt/
+      - ../data/:/src/data/
     restart: always
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
