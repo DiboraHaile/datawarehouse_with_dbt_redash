@@ -82,7 +82,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-    - /var/run/docker.sock:/var/run/docker.sock
+    # - /var/run/docker.sock:/var/run/docker.sock
     - ./../data/:/opt/airflow/dags/data/
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
@@ -279,6 +279,19 @@ services:
       - bash
       - -c
       - airflow
+  docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy:0.1.1
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      AUTH: 1
+      POST: 1
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./:/usr/app/dbt_transformation/
+      - /Users/dibora/.dbt/:/root/.dbt/
+    restart: always
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
