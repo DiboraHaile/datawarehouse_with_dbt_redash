@@ -14,4 +14,9 @@ Speed is in km/h, Longitudinal and Lateral Acceleration in m/sec2 and time in se
 
 ## Data schema
 Data is ingested to a postgres database with the name of traffic_stream_record
-there are two tables in these database named trajectory and record. You can find the schemas of these two tables on [here](https://dbdiagram.io/d/traffic_stream_record-65253c0bffbf5169f066488a)
+there are three tables in these database named trajectory, record and log. You can find the schemas of these two tables on [here](https://dbdiagram.io/d/traffic_stream_record-65253c0bffbf5169f066488a)
+
+Trajectory holds general information about the vehicle, where as record holds every trajectory reading of a vehicle every 4 seconds. The log table is to make sure data doesn't get ingested repeatedly, it holds information about ingested data.
+
+## Data Ingestion
+Download data sources from [neuma website](https://open-traffic.epfl.ch/index.php/downloads/#1599047632394-7ca81bff-5221) and put it here, before you start the ingester dag.
