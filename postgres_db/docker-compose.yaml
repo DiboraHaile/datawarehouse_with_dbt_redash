@@ -8,12 +8,12 @@ services:
       - "5435:5432"
     networks: 
       - airflow
-      - dbt
+      - redash
 
 networks:
   airflow:
-    external:
-      name: airflow_default
-  dbt:
-    external:
-      name: dbt_transformation_default
+    external: True
+    name: airflow_default
+  redash:
+    external: True
+    name: redash_default
