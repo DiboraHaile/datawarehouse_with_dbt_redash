@@ -6,8 +6,8 @@
     AIRFLOW_UID=501
     AIRFLOW_GID=0
     _PIP_ADDITIONAL_REQUIREMENTS=apache-airflow-providers-docker==2.1.0rc2
-    ABSOLUTE_PATH_PROJ=enter the absolute path of your project
-    DBT_LOC=location of your .dbt file
+    ABSOLUTE_PATH_PROJ=absolute path of your project
+    DBT_LOC=absolute path of your .dbt file
 
   ```
 - Then initialize airflow metadata database
