@@ -3,7 +3,6 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from datetime import datetime, timedelta
 from airflow import DAG
-from data_ingester import main
 import os
 from dotenv import load_dotenv
 from docker.types import Mount
@@ -20,7 +19,7 @@ PATH = os.getenv('ABSOLUTE_PATH_PROJ')
 default_args = {
     'owner': 'dibora',
     'depends_on_past': False,
-    'start_date': datetime(2023, 11, 8),
+    'start_date': datetime(2023,11,13),
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 0,
