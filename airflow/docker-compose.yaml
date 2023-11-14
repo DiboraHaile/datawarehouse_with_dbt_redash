@@ -50,10 +50,10 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider packages you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.2}
-  build:
-    context: .
-    dockerfile: Dockerfile
+  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.2}
+  # build:
+  #   context: .
+  #   dockerfile: Dockerfile
   env_file: 
     - .env
     
@@ -82,8 +82,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-    # - /var/run/docker.sock:/var/run/docker.sock
-    - ./../data/:/opt/airflow/dags/data/
+    - ${ABSOLUTE_PATH_PROJ}/data/:/opt/airflow/dags/data/
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -287,11 +286,13 @@ services:
       AUTH: 1
       POST: 1
     privileged: true
+    env_file:
+      - .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./:/usr/app/dbt_transformation/
-      - /Users/dibora/.dbt/:/root/.dbt/
-      - ../data/:/src/data/
+      - ${DBT_LOC}/.dbt/:/root/.dbt/
+      - ${ABSOLUTE_PATH_PROJ}/data/:/src/data/
     restart: always
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
@@ -317,7 +318,3 @@ services:
         condition: service_completed_successfully
 volumes:
   postgres-db-volume:
-
-# networks:
-#   custom-network:
-#     external: true
