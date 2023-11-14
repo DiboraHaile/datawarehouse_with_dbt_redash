@@ -1,0 +1,47 @@
+dw_dbt:
+  outputs:
+    dev:
+      type: postgres
+      threads: 1
+      host: 0.0.0.0
+      port: 5435
+      user: root
+      pass: root
+      dbname: traffic_stream_record
+      schema: pneuma_analytics
+    prod:
+      type: postgres
+      threads: 1
+      host: [host]
+      port: [port]
+      user: [prod_username]
+      pass: [prod_password]
+      dbname: [dbname]
+      schema: [prod_schema]
+
+  target: dev
+
+dbt_transformation:
+  outputs:
+
+    dev:
+      type: postgres
+      threads: 1
+      host: pgdatabase
+      port: 5432
+      user: root
+      pass: root
+      dbname: traffic_stream_record
+      schema: traffic_analysis
+
+    prod:
+      type: postgres
+      threads: [1 or more]
+      host: [host]
+      port: [port]
+      user: [prod_username]
+      pass: [prod_password]
+      dbname: [dbname]
+      schema: [prod_schema]
+
+  target: dev

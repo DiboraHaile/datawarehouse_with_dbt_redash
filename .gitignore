@@ -1,16 +1,17 @@
 airflow/.env
 airflow/plugins
+airflow/dags/__pychache__/
 *.csv
 dw_env
 logs
 postgres-data
 env
-<<<<<<< HEAD
-/__pychache__
+__pychache__
 /logs
 .*
 env
 *.pdf
+*.log
 
 
->>>>>>> 62cd4ec (remove unwanted files from being tracked by git)
+

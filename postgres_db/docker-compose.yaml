@@ -3,13 +3,17 @@ services:
     image: postgres:14
     env_file: ./env
     volumes:
-      - "./postgres_data:/var/lib/postgresql/data:rw"
+      - "./../postgres_data:/var/lib/postgresql/data:rw"
     ports:
       - "5435:5432"
     networks: 
       - airflow
+      - redash
 
 networks:
   airflow:
-    external:
-      name: airflow_default
+    external: True
+    name: airflow_default
+  redash:
+    external: True
+    name: redash_default
