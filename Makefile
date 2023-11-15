@@ -19,5 +19,5 @@ start:
 stop:
 	make -C airflow/ stop
 	make -C redash/ stop
-	docker-compose -f postgres/docker-compose.yaml down 
+	docker-compose -f postgres_db/docker-compose.yaml down 
 
